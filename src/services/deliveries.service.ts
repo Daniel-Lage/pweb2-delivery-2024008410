@@ -1,15 +1,19 @@
+import type {
+  DeliveryCreatePayload,
+  DeliveryUpdatePayload,
+} from "../dto/deliveries.dto.js";
+
+import type { DeliveriesRepository } from "../repositories/deliveries.repository.js";
 import { AppError } from "../utils/AppError.js";
 
 export class DeliveriesService {
-  constructor(deliveriesRepository) {
-    this.deliveriesRepository = deliveriesRepository;
-  }
+  constructor(private deliveriesRepository: DeliveriesRepository) {}
 
   async list() {
     return await this.deliveriesRepository.list();
   }
 
-  async read(id) {
+  async read(id: number) {
     const delivery = await this.deliveriesRepository.read(id);
 
     if (!delivery) {
@@ -19,7 +23,7 @@ export class DeliveriesService {
     return delivery;
   }
 
-  async create(payload) {
+  async create(payload: DeliveryCreatePayload) {
     if (payload.origem === payload.destino) {
       throw new AppError("Origem e destino não podem ser iguais", 400);
     }
@@ -34,21 +38,19 @@ export class DeliveriesService {
     );
 
     if (deliveryPrevia) {
-      console.log("Entrega duplicada encontrada:", deliveryPrevia);
-
       throw new AppError("Proibido criar entrega ativa duplicada", 409);
     }
 
     return await this.deliveriesRepository.create(payload);
   }
 
-  async update(id, changes) {
+  async update(id: number, changes: DeliveryUpdatePayload) {
     await this.read(id);
 
     return await this.deliveriesRepository.update(id, changes);
   }
 
-  async delete(id) {
+  async delete(id: number) {
     await this.read(id);
 
     return await this.deliveriesRepository.delete(id);

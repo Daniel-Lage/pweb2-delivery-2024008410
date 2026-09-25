@@ -1,12 +1,13 @@
+import type { Request, Response } from "express";
+import type { DeliveriesService } from "../services/deliveries.service.js";
+import { DeliveryStatus, type Delivery } from "../models/delivery.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { AppError } from "../utils/AppError.js";
 
 export class DeliveriesController {
-  constructor(deliveriesService) {
-    this.deliveriesService = deliveriesService;
-  }
+  constructor(private deliveriesService: DeliveriesService) {}
 
-  create = asyncHandler(async (req, res) => {
+  create = asyncHandler(async (req: Request, res: Response) => {
     const { descricao, origem, destino } = req.body;
 
     const newDelivery = await this.deliveriesService.create({
@@ -15,24 +16,27 @@ export class DeliveriesController {
       destino,
     });
 
+    console.log("Nova entrega criada:", newDelivery);
+
     res.status(201).json(newDelivery);
   });
 
-  list = asyncHandler(async (req, res) => {
+  list = asyncHandler(async (req: Request, res: Response) => {
     const deliveries = await this.deliveriesService.list();
 
     if (req.query.status) {
       const filteredDeliveries = deliveries.filter(
-        (delivery) => delivery.status === req.query.status,
+        (delivery: Delivery) => delivery.status === req.query.status,
       );
 
-      return res.json(filteredDeliveries);
+      res.json(filteredDeliveries);
+      return;
     }
 
     res.json(deliveries);
   });
 
-  read = asyncHandler(async (req, res) => {
+  read = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const delivery = await this.deliveriesService.read(Number(id));
@@ -40,49 +44,54 @@ export class DeliveriesController {
     res.json(delivery);
   });
 
-  advance = asyncHandler(async (req, res) => {
+  advance = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const delivery = await this.deliveriesService.read(Number(id));
 
-    if (delivery.status === "CRIADA") {
+    if (delivery.status === DeliveryStatus.CRIADA) {
       const updatedDelivery = await this.deliveriesService.update(Number(id), {
-        status: "EM_TRANSITO",
+        status: DeliveryStatus.EM_TRANSITO,
         historico: [
           ...delivery.historico,
           { data: new Date().toISOString(), descricao: "Despacho" },
         ],
       });
 
-      return res.json(updatedDelivery);
+      res.json(updatedDelivery);
+      return;
     }
 
-    if (delivery.status === "EM_TRANSITO") {
+    if (delivery.status === DeliveryStatus.EM_TRANSITO) {
       const updatedDelivery = await this.deliveriesService.update(Number(id), {
-        status: "ENTREGUE",
+        status: DeliveryStatus.ENTREGUE,
         historico: [
           ...delivery.historico,
           { data: new Date().toISOString(), descricao: "Entrega" },
         ],
       });
 
-      return res.json(updatedDelivery);
+      res.json(updatedDelivery);
+      return;
     }
 
     throw new AppError("Entrega já foi finalizada", 422);
   });
 
-  cancel = asyncHandler(async (req, res) => {
+  cancel = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const delivery = await this.deliveriesService.read(Number(id));
 
-    if (delivery.status === "ENTREGUE" || delivery.status === "CANCELADA") {
+    if (
+      delivery.status === DeliveryStatus.ENTREGUE ||
+      delivery.status === DeliveryStatus.CANCELADA
+    ) {
       throw new AppError("Entrega já foi finalizada", 422);
     }
 
     const updatedDelivery = await this.deliveriesService.update(Number(id), {
-      status: "CANCELADA",
+      status: DeliveryStatus.CANCELADA,
       historico: [
         ...delivery.historico,
         { data: new Date().toISOString(), descricao: "Cancelamento" },
@@ -91,7 +100,7 @@ export class DeliveriesController {
     res.json(updatedDelivery);
   });
 
-  listHistory = asyncHandler(async (req, res) => {
+  listHistory = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const delivery = await this.deliveriesService.read(Number(id));
