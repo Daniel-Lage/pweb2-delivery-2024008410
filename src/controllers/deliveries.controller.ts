@@ -22,16 +22,24 @@ export class DeliveriesController {
   });
 
   list = asyncHandler(async (req: Request, res: Response) => {
-    const deliveries = await this.deliveriesService.list();
+    const { status } = req.query;
 
-    if (req.query.status) {
-      const filteredDeliveries = deliveries.filter(
-        (delivery: Delivery) => delivery.status === req.query.status,
-      );
-
-      res.json(filteredDeliveries);
+    if (status == null) {
+      const deliveries = await this.deliveriesService.list();
+      res.json(deliveries);
       return;
     }
+
+    if (
+      typeof status !== "string" ||
+      !Object.values(DeliveryStatus).includes(status as DeliveryStatus)
+    ) {
+      throw new AppError("Status inválido", 400);
+    }
+
+    const deliveries = await this.deliveriesService.list(
+      status as DeliveryStatus,
+    );
 
     res.json(deliveries);
   });

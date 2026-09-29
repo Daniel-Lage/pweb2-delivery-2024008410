@@ -6,23 +6,23 @@ import { DeliveriesController } from "../controllers/deliveries.controller.js";
 import { Router } from "express";
 import { Database } from "../database/database.js";
 
-const database = new Database<Delivery>();
-const repository = new DeliveriesRepository(database);
-const service = new DeliveriesService(repository);
-const controller = new DeliveriesController(service);
+const database = new Database();
+const deliveriesRepository = new DeliveriesRepository(database);
+const deliveriesService = new DeliveriesService(deliveriesRepository);
+const deliveriesController = new DeliveriesController(deliveriesService);
 
 const router = Router();
 
-router.post("/", controller.create);
+router.post("/", deliveriesController.create);
 
-router.get("/", controller.list);
+router.get("/", deliveriesController.list);
 
-router.get("/:id", controller.read);
+router.get("/:id", deliveriesController.read);
 
-router.patch("/:id/avancar", controller.advance);
+router.patch("/:id/avancar", deliveriesController.advance);
 
-router.patch("/:id/cancelar", controller.cancel);
+router.patch("/:id/cancelar", deliveriesController.cancel);
 
-router.get("/:id/historico", controller.listHistory);
+router.get("/:id/historico", deliveriesController.listHistory);
 
 export default router;

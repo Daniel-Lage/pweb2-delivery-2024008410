@@ -1,16 +1,25 @@
-import type { Database } from "../database/database.js";
+import type { Database, Table } from "../database/database.js";
 import type { DeliveryCreatePayload } from "../dto/deliveries.dto.js";
 import { type Delivery, DeliveryStatus } from "../models/delivery.model.js";
 
 export class DeliveriesRepository {
-  constructor(private database: Database<Delivery>) {}
+  private table: Table<Delivery>;
 
-  async list() {
-    return this.database.list();
+  constructor(database: Database) {
+    this.table = database.getTable<Delivery>("deliveries");
+  }
+
+  async list(status?: DeliveryStatus) {
+    return this.table.list((delivery) => {
+      if (status) {
+        return delivery.status === status;
+      }
+      return true;
+    });
   }
 
   async read(id: number) {
-    const delivery = this.database.find((delivery) => delivery.id === id);
+    const delivery = this.table.find((delivery) => delivery.id === id);
 
     if (!delivery) {
       return null;
@@ -19,8 +28,8 @@ export class DeliveriesRepository {
     return delivery;
   }
 
-  async readByFilter(filtro: (delivery: Delivery) => boolean) {
-    const delivery = this.database.find(filtro);
+  async readBy(filters: (delivery: Delivery) => boolean) {
+    const delivery = this.table.find(filters);
 
     if (!delivery) {
       return null;
@@ -37,12 +46,12 @@ export class DeliveriesRepository {
       historico: [{ data: new Date().toISOString(), descricao: "Criacao" }],
     };
 
-    return this.database.push(newDelivery);
+    return this.table.push(newDelivery);
   }
 
   async update(id: number, changes: Partial<DeliveryCreatePayload>) {
-    const index = this.database.findIndex((delivery) => delivery.id === id);
-    const delivery = this.database.get(index);
+    const index = this.table.findIndex((delivery) => delivery.id === id);
+    const delivery = this.table.get(index);
 
     if (!delivery) {
       return null;
@@ -60,17 +69,17 @@ export class DeliveriesRepository {
       ...updates,
     };
 
-    return this.database.put(index, finalDelivery);
+    return this.table.put(index, finalDelivery);
   }
 
   async delete(id: number) {
-    const index = this.database.findIndex((delivery) => delivery.id === id);
+    const index = this.table.findIndex((delivery) => delivery.id === id);
 
     if (index === -1) {
       return false;
     }
 
-    this.database.splice(index, 1);
+    this.table.splice(index, 1);
 
     return true;
   }

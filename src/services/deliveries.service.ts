@@ -2,6 +2,7 @@ import type {
   DeliveryCreatePayload,
   DeliveryUpdatePayload,
 } from "../dto/deliveries.dto.js";
+import type { Delivery, DeliveryStatus } from "../models/delivery.model.js";
 
 import type { DeliveriesRepository } from "../repositories/deliveries.repository.js";
 import { AppError } from "../utils/AppError.js";
@@ -9,8 +10,8 @@ import { AppError } from "../utils/AppError.js";
 export class DeliveriesService {
   constructor(private deliveriesRepository: DeliveriesRepository) {}
 
-  async list() {
-    return await this.deliveriesRepository.list();
+  async list(status?: DeliveryStatus) {
+    return await this.deliveriesRepository.list(status);
   }
 
   async read(id: number) {
@@ -28,7 +29,7 @@ export class DeliveriesService {
       throw new AppError("Origem e destino não podem ser iguais", 400);
     }
 
-    const deliveryPrevia = await this.deliveriesRepository.readByFilter(
+    const deliveryPrevia = await this.deliveriesRepository.readBy(
       (delivery) =>
         delivery.descricao === payload.descricao &&
         delivery.origem === payload.origem &&
