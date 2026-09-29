@@ -1,6 +1,6 @@
 import type { Database, Table } from "../database/database.js";
 import type { DeliveryCreatePayload } from "../dto/deliveries.dto.js";
-import { type Delivery, DeliveryStatus } from "../models/delivery.model.js";
+import { type Delivery, DeliveryStatus } from "../models/deliveries.model.js";
 
 export class DeliveriesRepository {
   private table: Table<Delivery>;

@@ -2,7 +2,7 @@ import type {
   DeliveryCreatePayload,
   DeliveryUpdatePayload,
 } from "../dto/deliveries.dto.js";
-import type { DeliveryStatus } from "../models/delivery.model.js";
+import type { DeliveryStatus } from "../models/deliveries.model.js";
 
 import type { DeliveriesRepository } from "../repositories/deliveries.repository.js";
 import { AppError } from "../utils/AppError.js";

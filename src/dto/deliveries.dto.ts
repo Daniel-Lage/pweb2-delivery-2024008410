@@ -1,4 +1,4 @@
-import type { DeliveryStatus } from "../models/delivery.model.js";
+import type { DeliveryStatus } from "../models/deliveries.model.js";
 
 export type DeliveryCreatePayload = {
   descricao: string;
