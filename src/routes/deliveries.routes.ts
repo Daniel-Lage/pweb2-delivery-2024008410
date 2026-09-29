@@ -1,5 +1,3 @@
-import type { Delivery } from "../models/delivery.model.js";
-
 import { DeliveriesRepository } from "../repositories/deliveries.repository.js";
 import { DeliveriesService } from "../services/deliveries.service.js";
 import { DeliveriesController } from "../controllers/deliveries.controller.js";

@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import type { DeliveriesService } from "../services/deliveries.service.js";
-import { DeliveryStatus, type Delivery } from "../models/delivery.model.js";
+import { DeliveryStatus } from "../models/delivery.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { AppError } from "../utils/AppError.js";
 
