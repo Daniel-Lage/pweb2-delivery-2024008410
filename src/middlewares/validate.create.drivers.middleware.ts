@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { NextFunction, Request, Response } from "express";
 import { AppError } from "../utils/AppError.js";
 

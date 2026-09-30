@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { NextFunction, Request, Response } from "express";
 import { AppError } from "../utils/AppError.js";
 import { DeliveryStatus } from "../models/deliveries.model.js";
 
-export function validateCreateDeliveries(
+export function validateListDeliveries(
   req: Request,
   res: Response,
   next: NextFunction,
@@ -12,6 +11,7 @@ export function validateCreateDeliveries(
 
   if (status == null) {
     next();
+    return;
   }
 
   if (
