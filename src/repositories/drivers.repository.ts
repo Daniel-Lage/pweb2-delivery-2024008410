@@ -2,7 +2,14 @@ import type { Database, Table } from "../database/database.js";
 import type { DriverCreatePayload } from "../dto/drivers.dto.js";
 import { DriverStatus, type Driver } from "../models/drivers.model.js";
 
-export class DriversRepository {
+export interface IDriversRepository {
+  list(): Promise<Driver[]>;
+  read(id: number): Promise<Driver | null>;
+  readBy(cpf: string): Promise<Driver | null>;
+  create(payload: DriverCreatePayload): Promise<Driver>;
+}
+
+export class DriversRepository implements IDriversRepository {
   private table: Table<Driver>;
 
   constructor(database: Database) {

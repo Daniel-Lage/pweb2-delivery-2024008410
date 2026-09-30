@@ -2,14 +2,14 @@ import type { DeliveryCreatePayload } from "../dto/deliveries.dto.js";
 import { DeliveryStatus } from "../models/deliveries.model.js";
 import { DriverStatus } from "../models/drivers.model.js";
 
-import type { DeliveriesRepository } from "../repositories/deliveries.repository.js";
-import type { DriversRepository } from "../repositories/drivers.repository.js";
+import type { IDeliveriesRepository } from "../repositories/deliveries.repository.js";
+import type { IDriversRepository } from "../repositories/drivers.repository.js";
 import { AppError } from "../utils/AppError.js";
 
 export class DeliveriesService {
   constructor(
-    private deliveriesRepository: DeliveriesRepository,
-    private driversRepository: DriversRepository,
+    private deliveriesRepository: IDeliveriesRepository,
+    private driversRepository: IDriversRepository,
   ) {}
 
   async create(payload: DeliveryCreatePayload) {

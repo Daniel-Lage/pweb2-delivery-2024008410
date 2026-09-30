@@ -2,7 +2,26 @@ import type { Database, Table } from "../database/database.js";
 import type { DeliveryCreatePayload } from "../dto/deliveries.dto.js";
 import { type Delivery, DeliveryStatus } from "../models/deliveries.model.js";
 
-export class DeliveriesRepository {
+export interface IDeliveriesRepository {
+  list(status?: DeliveryStatus): Promise<Delivery[]>;
+  listByDriverId(
+    motoristaId: number,
+    status?: DeliveryStatus,
+  ): Promise<Delivery[]>;
+  read(id: number): Promise<Delivery | null>;
+  readByAttributes(
+    descricao: string,
+    origem: string,
+    destino: string,
+  ): Promise<Delivery | null>;
+  create(payload: DeliveryCreatePayload): Promise<Delivery>;
+  update(
+    id: number,
+    changes: Partial<Omit<Delivery, "id">>,
+  ): Promise<Delivery | null>;
+}
+
+export class DeliveriesRepository implements IDeliveriesRepository {
   private table: Table<Delivery>;
 
   constructor(database: Database) {

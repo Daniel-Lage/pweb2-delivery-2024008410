@@ -1,14 +1,14 @@
 import type { DriverCreatePayload } from "../dto/drivers.dto.js";
 import type { DeliveryStatus } from "../models/deliveries.model.js";
-import type { DeliveriesRepository } from "../repositories/deliveries.repository.js";
+import type { IDeliveriesRepository } from "../repositories/deliveries.repository.js";
 
-import type { DriversRepository } from "../repositories/drivers.repository.js";
+import type { IDriversRepository } from "../repositories/drivers.repository.js";
 import { AppError } from "../utils/AppError.js";
 
 export class DriversService {
   constructor(
-    private driversRepository: DriversRepository,
-    private deliveriesRepository: DeliveriesRepository,
+    private driversRepository: IDriversRepository,
+    private deliveriesRepository: IDeliveriesRepository,
   ) {}
 
   async create(payload: DriverCreatePayload) {
