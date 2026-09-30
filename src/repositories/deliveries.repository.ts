@@ -28,8 +28,15 @@ export class DeliveriesRepository {
     return delivery;
   }
 
-  async readBy(filters: (delivery: Delivery) => boolean) {
-    const delivery = this.table.find(filters);
+  async readBy(descricao: string, origem: string, destino: string) {
+    const delivery = this.table.find(
+      (delivery) =>
+        delivery.descricao === descricao &&
+        delivery.origem === origem &&
+        delivery.destino === destino &&
+        delivery.status !== DeliveryStatus.ENTREGUE &&
+        delivery.status !== DeliveryStatus.CANCELADA,
+    );
 
     if (!delivery) {
       return null;
@@ -49,7 +56,7 @@ export class DeliveriesRepository {
     return this.table.push(newDelivery);
   }
 
-  async update(id: number, changes: Partial<DeliveryCreatePayload>) {
+  async update(id: number, changes: Partial<Omit<Delivery, "id">>) {
     const index = this.table.findIndex((delivery) => delivery.id === id);
     const delivery = this.table.get(index);
 

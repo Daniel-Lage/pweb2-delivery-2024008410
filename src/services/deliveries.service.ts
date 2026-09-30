@@ -1,8 +1,5 @@
-import type {
-  DeliveryCreatePayload,
-  DeliveryUpdatePayload,
-} from "../dto/deliveries.dto.js";
-import type { DeliveryStatus } from "../models/deliveries.model.js";
+import type { DeliveryCreatePayload } from "../dto/deliveries.dto.js";
+import type { Delivery, DeliveryStatus } from "../models/deliveries.model.js";
 
 import type { DeliveriesRepository } from "../repositories/deliveries.repository.js";
 import { AppError } from "../utils/AppError.js";
@@ -29,31 +26,22 @@ export class DeliveriesService {
       throw new AppError("Origem e destino não podem ser iguais", 400);
     }
 
-    const deliveryPrevia = await this.deliveriesRepository.readBy(
-      (delivery) =>
-        delivery.descricao === payload.descricao &&
-        delivery.origem === payload.origem &&
-        delivery.destino === payload.destino &&
-        delivery.status !== "ENTREGUE" &&
-        delivery.status !== "CANCELADA",
+    const deliveryCadastrada = await this.deliveriesRepository.readBy(
+      payload.descricao,
+      payload.origem,
+      payload.destino,
     );
 
-    if (deliveryPrevia) {
+    if (deliveryCadastrada) {
       throw new AppError("Proibido criar entrega ativa duplicada", 409);
     }
 
     return await this.deliveriesRepository.create(payload);
   }
 
-  async update(id: number, changes: DeliveryUpdatePayload) {
+  async update(id: number, changes: Partial<Omit<Delivery, "id">>) {
     await this.read(id);
 
     return await this.deliveriesRepository.update(id, changes);
-  }
-
-  async delete(id: number) {
-    await this.read(id);
-
-    return await this.deliveriesRepository.delete(id);
   }
 }

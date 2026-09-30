@@ -5,11 +5,3 @@ export type DeliveryCreatePayload = {
   origem: string;
   destino: string;
 };
-
-export type DeliveryUpdatePayload = {
-  descricao?: string;
-  origem?: string;
-  destino?: string;
-  status?: DeliveryStatus;
-  historico?: { data: string; descricao: string }[];
-};

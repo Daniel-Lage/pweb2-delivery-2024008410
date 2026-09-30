@@ -3,20 +3,15 @@ import type { DeliveriesService } from "../services/deliveries.service.js";
 import { DeliveryStatus } from "../models/deliveries.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { AppError } from "../utils/AppError.js";
+import type { DeliveryCreatePayload } from "../dto/deliveries.dto.js";
 
 export class DeliveriesController {
   constructor(private deliveriesService: DeliveriesService) {}
 
   create = asyncHandler(async (req: Request, res: Response) => {
-    const { descricao, origem, destino } = req.body;
+    const payload: DeliveryCreatePayload = req.body;
 
-    const newDelivery = await this.deliveriesService.create({
-      descricao,
-      origem,
-      destino,
-    });
-
-    console.log("Nova entrega criada:", newDelivery);
+    const newDelivery = await this.deliveriesService.create(payload);
 
     res.status(201).json(newDelivery);
   });

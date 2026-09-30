@@ -3,6 +3,7 @@ import { DeliveriesService } from "../services/deliveries.service.js";
 import { DeliveriesController } from "../controllers/deliveries.controller.js";
 import { Router } from "express";
 import { Database } from "../database/database.js";
+import { validateCreateDeliveries } from "../middlewares/validate.create.deliveries.middleware.js";
 
 const database = new Database();
 const deliveriesRepository = new DeliveriesRepository(database);
@@ -11,7 +12,7 @@ const deliveriesController = new DeliveriesController(deliveriesService);
 
 const router = Router();
 
-router.post("/", deliveriesController.create);
+router.post("/", validateCreateDeliveries, deliveriesController.create);
 
 router.get("/", deliveriesController.list);
 
