@@ -3,13 +3,24 @@ export type DatabaseRecord = {
 };
 
 export class Database {
+  private static instance?: Database;
   private tables: Map<string, Table<DatabaseRecord>> = new Map();
 
-  getTable<T extends DatabaseRecord>(name: string) {
-    if (!this.tables.has(name)) {
-      this.tables.set(name, new Table<T>());
+  constructor() {
+    if (Database.instance == null) {
+      Database.instance = this;
     }
-    return this.tables.get(name) as Table<T>;
+    return Database.instance;
+  }
+
+  getTable<T extends DatabaseRecord>(name: string) {
+    const database = Database.instance ?? this;
+
+    if (!database.tables.has(name)) {
+      database.tables.set(name, new Table<T>());
+    }
+
+    return database.tables.get(name) as Table<T>;
   }
 }
 
