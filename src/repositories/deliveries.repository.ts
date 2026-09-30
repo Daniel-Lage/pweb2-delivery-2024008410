@@ -2,7 +2,26 @@ import type { Database, Table } from "../database/database.js";
 import type { DeliveryCreatePayload } from "../dto/deliveries.dto.js";
 import { type Delivery, DeliveryStatus } from "../models/deliveries.model.js";
 
-export class DeliveriesRepository {
+export interface IDeliveriesRepository {
+  list(status?: DeliveryStatus): Promise<Delivery[]>;
+  listByDriverId(
+    motoristaId: number,
+    status?: DeliveryStatus,
+  ): Promise<Delivery[]>;
+  read(id: number): Promise<Delivery | null>;
+  readByAttributes(
+    descricao: string,
+    origem: string,
+    destino: string,
+  ): Promise<Delivery | null>;
+  create(payload: DeliveryCreatePayload): Promise<Delivery>;
+  update(
+    id: number,
+    changes: Partial<Omit<Delivery, "id">>,
+  ): Promise<Delivery | null>;
+}
+
+export class DeliveriesRepository implements IDeliveriesRepository {
   private table: Table<Delivery>;
 
   constructor(database: Database) {
@@ -18,6 +37,17 @@ export class DeliveriesRepository {
     });
   }
 
+  async listByDriverId(motoristaId: number, status?: DeliveryStatus) {
+    return this.table.list((delivery) => {
+      if (status) {
+        return (
+          delivery.status === status && delivery.motoristaId === motoristaId
+        );
+      }
+      return delivery.motoristaId === motoristaId;
+    });
+  }
+
   async read(id: number) {
     const delivery = this.table.find((delivery) => delivery.id === id);
 
@@ -28,7 +58,7 @@ export class DeliveriesRepository {
     return delivery;
   }
 
-  async readBy(descricao: string, origem: string, destino: string) {
+  async readByAttributes(descricao: string, origem: string, destino: string) {
     const delivery = this.table.find(
       (delivery) =>
         delivery.descricao === descricao &&
@@ -58,6 +88,11 @@ export class DeliveriesRepository {
 
   async update(id: number, changes: Partial<Omit<Delivery, "id">>) {
     const index = this.table.findIndex((delivery) => delivery.id === id);
+
+    if (index === -1) {
+      return null;
+    }
+
     const delivery = this.table.get(index);
 
     if (!delivery) {
@@ -77,17 +112,5 @@ export class DeliveriesRepository {
     };
 
     return this.table.put(index, finalDelivery);
-  }
-
-  async delete(id: number) {
-    const index = this.table.findIndex((delivery) => delivery.id === id);
-
-    if (index === -1) {
-      return false;
-    }
-
-    this.table.splice(index, 1);
-
-    return true;
   }
 }

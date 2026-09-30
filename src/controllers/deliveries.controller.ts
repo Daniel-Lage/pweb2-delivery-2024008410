@@ -2,7 +2,6 @@ import type { Request, Response } from "express";
 import type { DeliveriesService } from "../services/deliveries.service.js";
 import { DeliveryStatus } from "../models/deliveries.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { AppError } from "../utils/AppError.js";
 import type { DeliveryCreatePayload } from "../dto/deliveries.dto.js";
 
 export class DeliveriesController {
@@ -17,24 +16,9 @@ export class DeliveriesController {
   });
 
   list = asyncHandler(async (req: Request, res: Response) => {
-    const { status } = req.query;
+    const { status }: { status?: DeliveryStatus } = req.query;
 
-    if (status == null) {
-      const deliveries = await this.deliveriesService.list();
-      res.json(deliveries);
-      return;
-    }
-
-    if (
-      typeof status !== "string" ||
-      !Object.values(DeliveryStatus).includes(status as DeliveryStatus)
-    ) {
-      throw new AppError("Status inválido", 400);
-    }
-
-    const deliveries = await this.deliveriesService.list(
-      status as DeliveryStatus,
-    );
+    const deliveries = await this.deliveriesService.list(status);
 
     res.json(deliveries);
   });
@@ -50,56 +34,16 @@ export class DeliveriesController {
   advance = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
 
-    const delivery = await this.deliveriesService.read(Number(id));
+    const updatedDelivery = await this.deliveriesService.advance(Number(id));
 
-    if (delivery.status === DeliveryStatus.CRIADA) {
-      const updatedDelivery = await this.deliveriesService.update(Number(id), {
-        status: DeliveryStatus.EM_TRANSITO,
-        historico: [
-          ...delivery.historico,
-          { data: new Date().toISOString(), descricao: "Despacho" },
-        ],
-      });
-
-      res.json(updatedDelivery);
-      return;
-    }
-
-    if (delivery.status === DeliveryStatus.EM_TRANSITO) {
-      const updatedDelivery = await this.deliveriesService.update(Number(id), {
-        status: DeliveryStatus.ENTREGUE,
-        historico: [
-          ...delivery.historico,
-          { data: new Date().toISOString(), descricao: "Entrega" },
-        ],
-      });
-
-      res.json(updatedDelivery);
-      return;
-    }
-
-    throw new AppError("Entrega já foi finalizada", 422);
+    res.json(updatedDelivery);
   });
 
   cancel = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
 
-    const delivery = await this.deliveriesService.read(Number(id));
+    const updatedDelivery = await this.deliveriesService.cancel(Number(id));
 
-    if (
-      delivery.status === DeliveryStatus.ENTREGUE ||
-      delivery.status === DeliveryStatus.CANCELADA
-    ) {
-      throw new AppError("Entrega já foi finalizada", 422);
-    }
-
-    const updatedDelivery = await this.deliveriesService.update(Number(id), {
-      status: DeliveryStatus.CANCELADA,
-      historico: [
-        ...delivery.historico,
-        { data: new Date().toISOString(), descricao: "Cancelamento" },
-      ],
-    });
     res.json(updatedDelivery);
   });
 
@@ -109,5 +53,17 @@ export class DeliveriesController {
     const delivery = await this.deliveriesService.read(Number(id));
 
     res.json(delivery.historico);
+  });
+
+  assign = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { motoristaId } = req.body;
+
+    const updatedDelivery = await this.deliveriesService.assign(
+      Number(id),
+      Number(motoristaId),
+    );
+
+    res.json(updatedDelivery);
   });
 }
