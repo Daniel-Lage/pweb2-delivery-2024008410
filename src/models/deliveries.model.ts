@@ -11,5 +11,6 @@ export type Delivery = {
   origem: string;
   destino: string;
   status: DeliveryStatus;
+  motoristaId: number | null;
   historico: { data: string; descricao: string }[];
 };

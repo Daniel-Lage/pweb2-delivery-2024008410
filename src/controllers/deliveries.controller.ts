@@ -4,9 +4,14 @@ import { DeliveryStatus } from "../models/deliveries.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { AppError } from "../utils/AppError.js";
 import type { DeliveryCreatePayload } from "../dto/deliveries.dto.js";
+import type { DriversService } from "../services/drivers.service.js";
+import { DriverStatus } from "../models/drivers.model.js";
 
 export class DeliveriesController {
-  constructor(private deliveriesService: DeliveriesService) {}
+  constructor(
+    private deliveriesService: DeliveriesService,
+    private driversService: DriversService,
+  ) {}
 
   create = asyncHandler(async (req: Request, res: Response) => {
     const payload: DeliveryCreatePayload = req.body;
@@ -17,24 +22,9 @@ export class DeliveriesController {
   });
 
   list = asyncHandler(async (req: Request, res: Response) => {
-    const { status } = req.query;
+    const { status }: { status?: DeliveryStatus } = req.query;
 
-    if (status == null) {
-      const deliveries = await this.deliveriesService.list();
-      res.json(deliveries);
-      return;
-    }
-
-    if (
-      typeof status !== "string" ||
-      !Object.values(DeliveryStatus).includes(status as DeliveryStatus)
-    ) {
-      throw new AppError("Status inválido", 400);
-    }
-
-    const deliveries = await this.deliveriesService.list(
-      status as DeliveryStatus,
-    );
+    const deliveries = await this.deliveriesService.list(status);
 
     res.json(deliveries);
   });
@@ -100,6 +90,7 @@ export class DeliveriesController {
         { data: new Date().toISOString(), descricao: "Cancelamento" },
       ],
     });
+
     res.json(updatedDelivery);
   });
 
@@ -109,5 +100,31 @@ export class DeliveriesController {
     const delivery = await this.deliveriesService.read(Number(id));
 
     res.json(delivery.historico);
+  });
+
+  assign = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { motoristaId } = req.body;
+
+    const delivery = await this.deliveriesService.read(Number(id));
+    const driver = await this.driversService.read(Number(motoristaId));
+
+    if (driver.status !== DriverStatus.ATIVO) {
+      throw new AppError("Motorista não está ativo", 422);
+    }
+
+    if (delivery.status !== DeliveryStatus.CRIADA) {
+      throw new AppError("Entrega não pode ser atribuída", 422);
+    }
+
+    const updatedDelivery = await this.deliveriesService.update(Number(id), {
+      motoristaId: Number(motoristaId),
+      historico: [
+        ...delivery.historico,
+        { data: new Date().toISOString(), descricao: "Atribuicao" },
+      ],
+    });
+
+    res.json(updatedDelivery);
   });
 }
