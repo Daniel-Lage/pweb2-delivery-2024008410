@@ -9,8 +9,16 @@ export function validateCreateDeliveries(
 ) {
   const { descricao, origem, destino } = req.body;
 
-  if (!descricao || !origem || !destino) {
-    throw new AppError("Campos obrigatórios não foram preenchidos", 400);
+  if (!descricao) {
+    throw new AppError("Campo 'descricao' é obrigatório", 400);
+  }
+
+  if (!origem) {
+    throw new AppError("Campo 'origem' é obrigatório", 400);
+  }
+
+  if (!destino) {
+    throw new AppError("Campo 'destino' é obrigatório", 400);
   }
 
   next();
