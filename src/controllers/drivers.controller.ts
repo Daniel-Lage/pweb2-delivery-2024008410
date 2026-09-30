@@ -1,16 +1,11 @@
 import type { Request, Response } from "express";
 import type { DriversService } from "../services/drivers.service.js";
-import { DriverStatus } from "../models/drivers.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { AppError } from "../utils/AppError.js";
 import type { DriverCreatePayload } from "../dto/drivers.dto.js";
-import type { DeliveriesService } from "../services/deliveries.service.js";
+import type { DeliveryStatus } from "../models/deliveries.model.js";
 
 export class DriversController {
-  constructor(
-    private driversService: DriversService,
-    private deliveriesService: DeliveriesService,
-  ) {}
+  constructor(private driversService: DriversService) {}
 
   create = asyncHandler(async (req: Request, res: Response) => {
     const payload: DriverCreatePayload = req.body;
@@ -21,21 +16,6 @@ export class DriversController {
   });
 
   list = asyncHandler(async (req: Request, res: Response) => {
-    const { status } = req.query;
-
-    if (status == null) {
-      const drivers = await this.driversService.list();
-      res.json(drivers);
-      return;
-    }
-
-    if (
-      typeof status !== "string" ||
-      !Object.values(DriverStatus).includes(status as DriverStatus)
-    ) {
-      throw new AppError("Status inválido", 400);
-    }
-
     const drivers = await this.driversService.list();
 
     res.json(drivers);
@@ -51,10 +31,14 @@ export class DriversController {
 
   listDeliveries = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
+    const { status }: { status?: DeliveryStatus } = req.query;
 
     const driver = await this.driversService.read(Number(id));
 
-    const deliveries = await this.deliveriesService.listByDriverId(driver.id);
+    const deliveries = await this.driversService.listDeliveries(
+      driver.id,
+      status,
+    );
 
     res.json(deliveries);
   });
