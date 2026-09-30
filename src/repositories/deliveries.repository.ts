@@ -18,6 +18,10 @@ export class DeliveriesRepository {
     });
   }
 
+  async listByDriverId(motoristaId: number) {
+    return this.table.list((delivery) => delivery.motoristaId === motoristaId);
+  }
+
   async read(id: number) {
     const delivery = this.table.find((delivery) => delivery.id === id);
 
@@ -28,7 +32,7 @@ export class DeliveriesRepository {
     return delivery;
   }
 
-  async readBy(descricao: string, origem: string, destino: string) {
+  async readByAttributes(descricao: string, origem: string, destino: string) {
     const delivery = this.table.find(
       (delivery) =>
         delivery.descricao === descricao &&

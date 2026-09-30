@@ -11,6 +11,10 @@ export class DeliveriesService {
     return await this.deliveriesRepository.list(status);
   }
 
+  async listByDriverId(motoristaId: number) {
+    return await this.deliveriesRepository.listByDriverId(motoristaId);
+  }
+
   async read(id: number) {
     const delivery = await this.deliveriesRepository.read(id);
 
@@ -26,7 +30,7 @@ export class DeliveriesService {
       throw new AppError("Origem e destino não podem ser iguais", 400);
     }
 
-    const deliveryCadastrada = await this.deliveriesRepository.readBy(
+    const deliveryCadastrada = await this.deliveriesRepository.readByAttributes(
       payload.descricao,
       payload.origem,
       payload.destino,
