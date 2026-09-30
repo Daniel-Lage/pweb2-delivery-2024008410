@@ -5,32 +5,29 @@ import { Router } from "express";
 import { Database } from "../database/database.js";
 import { validateCreateDeliveries } from "../middlewares/validate.create.deliveries.middleware.js";
 import { DriversRepository } from "../repositories/drivers.repository.js";
-import { DriversService } from "../services/drivers.service.js";
+import { validateListDeliveries } from "../middlewares/validate.list.deliveries.middleware.js";
+import { validateAssignDrivers } from "../middlewares/validate.assign.drivers.middleware.js";
 
 const database = new Database();
 const deliveriesRepository = new DeliveriesRepository(database);
 const driversRepository = new DriversRepository(database);
-const deliveriesService = new DeliveriesService(deliveriesRepository);
-const driversService = new DriversService(driversRepository);
-const deliveriesController = new DeliveriesController(
-  deliveriesService,
-  driversService,
-);
+const service = new DeliveriesService(deliveriesRepository, driversRepository);
+const controller = new DeliveriesController(service);
 
 const router = Router();
 
-router.post("/", validateCreateDeliveries, deliveriesController.create);
+router.post("/", validateCreateDeliveries, controller.create);
 
-router.get("/", deliveriesController.list);
+router.get("/", validateListDeliveries, controller.list);
 
-router.get("/:id", deliveriesController.read);
+router.get("/:id", controller.read);
 
-router.patch("/:id/avancar", deliveriesController.advance);
+router.patch("/:id/avancar", controller.advance);
 
-router.patch("/:id/cancelar", deliveriesController.cancel);
+router.patch("/:id/cancelar", controller.cancel);
 
-router.get("/:id/historico", deliveriesController.listHistory);
+router.get("/:id/historico", controller.listHistory);
 
-router.patch("/:id/atribuir", deliveriesController.assign);
+router.patch("/:id/atribuir", validateAssignDrivers, controller.assign);
 
 export default router;
