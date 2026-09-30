@@ -41,18 +41,4 @@ export class DriversRepository {
 
     return this.table.push(newDriver);
   }
-
-  async update(id: number, changes: Partial<Omit<Driver, "id">>) {}
-
-  async delete(id: number) {
-    const index = this.table.findIndex((driver) => driver.id === id);
-
-    if (index === -1) {
-      return false;
-    }
-
-    this.table.splice(index, 1);
-
-    return true;
-  }
 }

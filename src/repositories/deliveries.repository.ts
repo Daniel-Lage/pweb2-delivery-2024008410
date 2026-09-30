@@ -18,8 +18,15 @@ export class DeliveriesRepository {
     });
   }
 
-  async listByDriverId(motoristaId: number) {
-    return this.table.list((delivery) => delivery.motoristaId === motoristaId);
+  async listByDriverId(motoristaId: number, status?: DeliveryStatus) {
+    return this.table.list((delivery) => {
+      if (status) {
+        return (
+          delivery.status === status && delivery.motoristaId === motoristaId
+        );
+      }
+      return delivery.motoristaId === motoristaId;
+    });
   }
 
   async read(id: number) {
@@ -62,6 +69,11 @@ export class DeliveriesRepository {
 
   async update(id: number, changes: Partial<Omit<Delivery, "id">>) {
     const index = this.table.findIndex((delivery) => delivery.id === id);
+
+    if (index === -1) {
+      return null;
+    }
+
     const delivery = this.table.get(index);
 
     if (!delivery) {
@@ -81,17 +93,5 @@ export class DeliveriesRepository {
     };
 
     return this.table.put(index, finalDelivery);
-  }
-
-  async delete(id: number) {
-    const index = this.table.findIndex((delivery) => delivery.id === id);
-
-    if (index === -1) {
-      return false;
-    }
-
-    this.table.splice(index, 1);
-
-    return true;
   }
 }
