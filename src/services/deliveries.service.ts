@@ -1,29 +1,16 @@
 import type { DeliveryCreatePayload } from "../dto/deliveries.dto.js";
-import type { Delivery, DeliveryStatus } from "../models/deliveries.model.js";
+import { DeliveryStatus } from "../models/deliveries.model.js";
+import { DriverStatus } from "../models/drivers.model.js";
 
 import type { DeliveriesRepository } from "../repositories/deliveries.repository.js";
+import type { DriversRepository } from "../repositories/drivers.repository.js";
 import { AppError } from "../utils/AppError.js";
 
 export class DeliveriesService {
-  constructor(private deliveriesRepository: DeliveriesRepository) {}
-
-  async list(status?: DeliveryStatus) {
-    return await this.deliveriesRepository.list(status);
-  }
-
-  async listByDriverId(motoristaId: number) {
-    return await this.deliveriesRepository.listByDriverId(motoristaId);
-  }
-
-  async read(id: number) {
-    const delivery = await this.deliveriesRepository.read(id);
-
-    if (!delivery) {
-      throw new AppError("Entrega não foi encontrada", 404);
-    }
-
-    return delivery;
-  }
+  constructor(
+    private deliveriesRepository: DeliveriesRepository,
+    private driversRepository: DriversRepository,
+  ) {}
 
   async create(payload: DeliveryCreatePayload) {
     if (payload.origem === payload.destino) {
@@ -43,9 +30,101 @@ export class DeliveriesService {
     return await this.deliveriesRepository.create(payload);
   }
 
-  async update(id: number, changes: Partial<Omit<Delivery, "id">>) {
-    await this.read(id);
+  async list(status?: DeliveryStatus) {
+    return await this.deliveriesRepository.list(status);
+  }
 
-    return await this.deliveriesRepository.update(id, changes);
+  async read(id: number) {
+    const delivery = await this.deliveriesRepository.read(id);
+
+    if (!delivery) {
+      throw new AppError("Entrega não foi encontrada", 404);
+    }
+
+    return delivery;
+  }
+
+  async advance(id: number) {
+    const delivery = await this.read(id);
+
+    if (delivery.status === DeliveryStatus.CRIADA) {
+      const updatedDelivery = await this.deliveriesRepository.update(
+        Number(id),
+        {
+          status: DeliveryStatus.EM_TRANSITO,
+          historico: [
+            ...delivery.historico,
+            { data: new Date().toISOString(), descricao: "Despacho" },
+          ],
+        },
+      );
+
+      return updatedDelivery;
+    }
+
+    if (delivery.status === DeliveryStatus.EM_TRANSITO) {
+      const updatedDelivery = await this.deliveriesRepository.update(
+        Number(id),
+        {
+          status: DeliveryStatus.ENTREGUE,
+          historico: [
+            ...delivery.historico,
+            { data: new Date().toISOString(), descricao: "Entrega" },
+          ],
+        },
+      );
+
+      return updatedDelivery;
+    }
+
+    throw new AppError("Entrega já foi finalizada", 422);
+  }
+
+  async cancel(id: number) {
+    const delivery = await this.read(Number(id));
+
+    if (
+      delivery.status === DeliveryStatus.ENTREGUE ||
+      delivery.status === DeliveryStatus.CANCELADA
+    ) {
+      throw new AppError("Entrega já foi finalizada", 422);
+    }
+
+    const updatedDelivery = await this.deliveriesRepository.update(Number(id), {
+      status: DeliveryStatus.CANCELADA,
+      historico: [
+        ...delivery.historico,
+        { data: new Date().toISOString(), descricao: "Cancelamento" },
+      ],
+    });
+
+    return updatedDelivery;
+  }
+
+  async assign(id: number, motoristaId: number) {
+    const delivery = await this.read(Number(id));
+    const driver = await this.driversRepository.read(Number(motoristaId));
+
+    if (!driver) {
+      throw new AppError("Motorista não foi encontrado", 404);
+    }
+
+    if (driver.status !== DriverStatus.ATIVO) {
+      throw new AppError("Motorista não está ativo", 422);
+    }
+
+    if (delivery.status !== DeliveryStatus.CRIADA) {
+      throw new AppError("Entrega não pode ser atribuída", 422);
+    }
+
+    const updatedDelivery = await this.deliveriesRepository.update(Number(id), {
+      motoristaId: Number(motoristaId),
+      historico: [
+        ...delivery.historico,
+        { data: new Date().toISOString(), descricao: "Atribuicao" },
+      ],
+    });
+
+    return updatedDelivery;
   }
 }
