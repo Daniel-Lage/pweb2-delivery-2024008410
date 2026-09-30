@@ -5,7 +5,7 @@ import { DriverStatus, type Driver } from "../models/drivers.model.js";
 export interface IDriversRepository {
   list(): Promise<Driver[]>;
   read(id: number): Promise<Driver | null>;
-  readBy(cpf: string): Promise<Driver | null>;
+  readByCpf(cpf: string): Promise<Driver | null>;
   create(payload: DriverCreatePayload): Promise<Driver>;
 }
 
@@ -30,7 +30,7 @@ export class DriversRepository implements IDriversRepository {
     return driver;
   }
 
-  async readBy(cpf: string) {
+  async readByCpf(cpf: string) {
     const driver = this.table.find((driver) => driver.cpf === cpf);
 
     if (!driver) {

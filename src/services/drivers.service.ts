@@ -12,7 +12,9 @@ export class DriversService {
   ) {}
 
   async create(payload: DriverCreatePayload) {
-    const driverCadastrado = await this.driversRepository.readBy(payload.cpf);
+    const driverCadastrado = await this.driversRepository.readByCpf(
+      payload.cpf,
+    );
 
     if (driverCadastrado) {
       throw new AppError("Proibido criar motorista duplicado", 409);
