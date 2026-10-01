@@ -25,14 +25,14 @@ Desenvolvida em express.js e Typescript.
 | `POST` | `/api/motoristas`              | Cadastra um motorista          | `body = { "nome": string, "cpf": string, "placaVeiculo"?: string }` |
 | `GET`  | `/api/motoristas`              | Lista todos os motoristas      | —                                                                   |
 | `GET`  | `/api/motoristas/:id`          | Consulta um motorista          | —                                                                   |
-| `GET`  | `/api/motoristas/:id/entregas` | Lista as entregas do motorista | `query ?= ?status=DeliveryStatus`                                   |
+| `GET`  | `/api/motoristas/:id/entregas` | Lista as entregas do motorista | `query = { "status"?: DeliveryStatus }`                             |
 
 ### Entregas
 
 | Método  | Endpoint                      | Descrição                       | Entrada                                                               |
 | ------- | ----------------------------- | ------------------------------- | --------------------------------------------------------------------- |
 | `POST`  | `/api/entregas`               | Cadastra uma entrega            | `body = { "descricao": string, "origem": string, "destino": string }` |
-| `GET`   | `/api/entregas`               | Lista as entregas               | `query ?= ?status=DeliveryStatus`                                     |
+| `GET`   | `/api/entregas`               | Lista as entregas               | `query = { "status"?: DeliveryStatus }`                               |
 | `GET`   | `/api/entregas/:id`           | Consulta uma entrega            | —                                                                     |
 | `PATCH` | `/api/entregas/:id/avancar`   | Avança o status da entrega      | —                                                                     |
 | `PATCH` | `/api/entregas/:id/cancelar`  | Cancela uma entrega             | —                                                                     |
