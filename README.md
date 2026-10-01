@@ -1,54 +1,71 @@
-# Delivery Tracker — Exercício do Capítulo 4
+# Delivery Tracker API
 
-> **Programação Web II — IFAL/Maceió.** Este é o **projeto do semestre** (avaliado). No Cap. 4 você
-> inicia a **Delivery Tracker API** com **arquitetura em camadas** e, depois, **Repository Pattern +
-> injeção de dependência**. A correção é **automática** (autograder de conformidade) + arquitetura.
+Aplicação backend para rastrear o ciclo de vida de encomendas de uma empresa de logística.
 
-## Como usar este repositório
+Desenvolvida em express.js e Typescript.
 
-1. Clique em **"Use this template"** e crie **`pweb2-delivery-<matricula>`** (ex.: `pweb2-delivery-20231012345`).
-   Este é o repositório que você usará o **semestre inteiro** (evolui a cada capítulo).
-2. Clone, instale e rode:
-   ```bash
-   npm install
-   npm start                                        # http://localhost:3000
-   # em outro terminal — autograder:
-   npm run check                                    # = BASE_URL=http://localhost:3000 node autograder/check.mjs
-   ```
-3. A cada `git push`, o **GitHub Actions** roda o autograder e mostra a nota na aba **Actions**
-   (resumo do job). O `autograder/check.mjs` é **aberto** — leia para saber exatamente o que se espera.
+## Scripts
 
-## O que implementar (em `src/`)
+`npm start`: compila a aplicação para JS e roda o servidor.
 
+`npm run dev`: roda o servidor da aplicação TS e atualiza com alterações no código.
+
+`npm run build`: compila a aplicação para JS.
+
+`npm run lint`: executa o eslint, verificando erros de tipo e codigo invalido.
+
+`npm run check`: testa o contrato da API (servidor precisa estar rodando).
+
+## Rotas
+
+### Motoristas
+
+| Método | Endpoint                       | Descrição                      | Entrada                                                             |
+| ------ | ------------------------------ | ------------------------------ | ------------------------------------------------------------------- |
+| `POST` | `/api/motoristas`              | Cadastra um motorista          | `body = { "nome": string, "cpf": string, "placaVeiculo"?: string }` |
+| `GET`  | `/api/motoristas`              | Lista todos os motoristas      | —                                                                   |
+| `GET`  | `/api/motoristas/:id`          | Consulta um motorista          | —                                                                   |
+| `GET`  | `/api/motoristas/:id/entregas` | Lista as entregas do motorista | `query ?= ?status=DeliveryStatus`                                   |
+
+### Entregas
+
+| Método  | Endpoint                      | Descrição                       | Entrada                                                               |
+| ------- | ----------------------------- | ------------------------------- | --------------------------------------------------------------------- |
+| `POST`  | `/api/entregas`               | Cadastra uma entrega            | `body = { "descricao": string, "origem": string, "destino": string }` |
+| `GET`   | `/api/entregas`               | Lista as entregas               | `query ?= ?status=DeliveryStatus`                                     |
+| `GET`   | `/api/entregas/:id`           | Consulta uma entrega            | —                                                                     |
+| `PATCH` | `/api/entregas/:id/avancar`   | Avança o status da entrega      | —                                                                     |
+| `PATCH` | `/api/entregas/:id/cancelar`  | Cancela uma entrega             | —                                                                     |
+| `GET`   | `/api/entregas/:id/historico` | Consulta o histórico da entrega | —                                                                     |
+| `PATCH` | `/api/entregas/:id/atribuir`  | Atribui um motorista à entrega  | `body = { "motoristaId": number }`                                    |
+
+### Composição das dependências
+
+O ponto de composição fica nos módulos de rota. Cada router instancia suas dependências concretas, injeta os repositories nos services e o service no controller. Os middlewares de validação são executados antes dos controllers nas rotas que exigem validação.
+
+```mermaid
+flowchart TD
+   Server[server.ts] --> App[app.ts]
+   App --> ApiRouter[routes/index.ts<br/>prefixo /api]
+
+   ApiRouter --> DriversRouter[routes/drivers.routes.ts<br/>/motoristas]
+   ApiRouter --> DeliveriesRouter[routes/deliveries.routes.ts<br/>/entregas]
+
+   DriversRouter --> DriversMiddleware[Middlewares de validação]
+   DriversMiddleware --> DriversController[DriversController]
+   DriversController --> DriversService[DriversService]
+   DriversService --> DriversRepository[DriversRepository]
+   DriversService --> DeliveriesRepositoryForDrivers[DeliveriesRepository]
+   DriversRepository --> Database[Database]
+   DeliveriesRepositoryForDrivers --> Database
+
+   DeliveriesRouter --> DeliveriesMiddleware[Middlewares de validação]
+   DeliveriesMiddleware --> DeliveriesController[DeliveriesController]
+   DeliveriesController --> DeliveriesService[DeliveriesService]
+   DeliveriesService --> DeliveriesRepository[DeliveriesRepository]
+   DeliveriesService --> DriversRepositoryForDeliveries[DriversRepository]
+   DeliveriesRepository --> Database[Database]
+   DriversRepositoryForDeliveries --> Database
 ```
-src/
-├── controllers/   # traduz HTTP ↔ service (sem regra de negócio)
-├── services/      # TODA a regra de negócio
-├── repositories/  # só acesso a dados
-├── database/      # persistência SIMULADA em memória (sem banco real, sem ORM)
-├── routes/        # composição das dependências (injeção) + monta em /api
-└── utils/
-```
 
-- **Regra de negócio só no Service.** Injeção de dependência no **composition root** (`src/routes`).
-- O `server.js` só configura o app (já traz o `GET /api/health` exigido — não remova).
-
-## Duas etapas (ver os enunciados completos)
-
-- **Atividade 05 — Entregas em camadas:** CRUD de `/api/entregas`, ciclo de status
-  (`CRIADA → EM_TRANSITO → ENTREGUE`/`CANCELADA`), histórico. Meta: checagens de **Entregas** verdes.
-- **Atividade 06 — Motoristas + Contratos + DI:** `/api/motoristas`, atribuição de motorista,
-  contratos de repository (JSDoc) e composição num ponto único. Meta: **122/122**.
-
-> O critério de **inversão de dependência** é verificado pelo professor **trocando o repository por
-> um Mock** que respeita o contrato — programe contra o contrato desde o início.
-
-## Contrato (resumo)
-
-- Base `/api` · JSON · erro `{ "erro": "..." }` · `GET /api/health` → `{ "status": "ok" }`.
-- Status: `201` criar · `400` entrada inválida · `404` não encontrado · `409` unicidade
-  (duplicata/CPF) · `422` regra de estado (transição/atribuição inválida).
-- Execução: `npm start`, respeita `process.env.PORT`, branch `main`.
-
-Faça **um commit por avanço** (Conventional Commits, ex.: `feat(entregas): valida origem ≠ destino`).
-Bom trabalho! 🚀
+Os services dependem dos contratos `IDriversRepository` e `IDeliveriesRepository`, o que permite substituir os repositories concretos por mocks nos testes. A persistência atual é simulada em memória por `Database`.
