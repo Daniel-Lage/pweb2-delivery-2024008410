@@ -4,6 +4,7 @@ import driversRouter from "./drivers.routes.js";
 
 const router = Router();
 
+router.get("/health", (req, res) => res.json({ status: "ok" }));
 router.use("/motoristas", driversRouter);
 router.use("/entregas", deliveriesRouter);
 
