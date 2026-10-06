@@ -1,9 +1,9 @@
 import type { DeliveryCreatePayload } from "../dto/deliveries.dto.js";
 import { DeliveryStatus } from "../models/deliveries.model.js";
 import { DriverStatus } from "../models/drivers.model.js";
+import type { IDeliveriesRepository } from "../repositories/deliveries.repository.interface.js";
+import type { IDriversRepository } from "../repositories/drivers.repository.interface.js";
 
-import type { IDeliveriesRepository } from "../repositories/deliveries.repository.js";
-import type { IDriversRepository } from "../repositories/drivers.repository.js";
 import { AppError } from "../utils/AppError.js";
 
 export class DeliveriesService {
