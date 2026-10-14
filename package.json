@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm run build && node dist/server.js",
     "dev": "tsx watch src/server.ts",
-    "build": "npx prisma generate && tsc",
+    "build": "npx prisma migrate dev && npx prisma generate && tsc",
     "lint": "eslint src/**/*.ts",
     "check": "node autograder/check.mjs"
   },
