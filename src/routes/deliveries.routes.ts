@@ -1,16 +1,22 @@
-import { DeliveriesRepository } from "../repositories/deliveries.repository.js";
+// import { DeliveriesRepository } from "../repositories/deliveries.repository.js";
 import { DeliveriesService } from "../services/deliveries.service.js";
 import { DeliveriesController } from "../controllers/deliveries.controller.js";
 import { Router } from "express";
-import { Database } from "../database/database.js";
+// import { Database } from "../database/database.js";
 import { validateCreateDeliveries } from "../middlewares/validate.create.deliveries.middleware.js";
-import { DriversRepository } from "../repositories/drivers.repository.js";
+// import { DriversRepository } from "../repositories/drivers.repository.js";
 import { validateListDeliveries } from "../middlewares/validate.list.deliveries.middleware.js";
 import { validateAssignDrivers } from "../middlewares/validate.assign.drivers.middleware.js";
+import { DeliveriesPrismaRepository } from "../repositories/deliveries.prisma.repository.js";
+import { DriversPrismaRepository } from "../repositories/drivers.prisma.repository.js";
 
-const database = new Database();
-const deliveriesRepository = new DeliveriesRepository(database);
-const driversRepository = new DriversRepository(database);
+// const database = new Database();
+// const deliveriesRepository = new DeliveriesRepository(database);
+// const driversRepository = new DriversRepository(database);
+
+const deliveriesRepository = new DeliveriesPrismaRepository();
+const driversRepository = new DriversPrismaRepository();
+
 const service = new DeliveriesService(deliveriesRepository, driversRepository);
 const controller = new DeliveriesController(service);
 

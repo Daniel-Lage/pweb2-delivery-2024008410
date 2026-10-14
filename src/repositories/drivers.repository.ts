@@ -37,7 +37,7 @@ export class DriversRepository implements IDriversRepository {
   async create(payload: DriverCreatePayload) {
     const newDriver = {
       ...payload,
-      status: DriverStatus.ATIVO,
+      status: DriverStatus.ATIVO as DriverStatus,
     };
 
     return this.table.push(newDriver);

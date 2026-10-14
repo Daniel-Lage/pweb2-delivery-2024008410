@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum DeliveryStatus {
+  CRIADA
+  EM_TRANSITO
+  ENTREGUE
+  CANCELADA
+}
+
+model Event {
+  id        Int      @id @default(autoincrement())
+  data      String
+  descricao String
+  entrega   Delivery @relation(fields: [entregaId], references: [id])
+  entregaId Int
+
+  @@map("eventos")
+}
+
+model Delivery {
+  id          Int            @id @default(autoincrement())
+  descricao   String
+  origem      String
+  destino     String
+  status      DeliveryStatus @default(CRIADA)
+  motoristaId Int?           @map("motoristaId")
+  motorista   Driver?        @relation(fields: [motoristaId], references: [id])
+  historico   Event[]
+
+  @@map("entregas")
+}
+
+enum DriverStatus {
+  ATIVO
+  INATIVO
+}
+
+model Driver {
+  id           Int          @id @default(autoincrement())
+  nome         String
+  cpf          String       @unique
+  placaVeiculo String?
+  status       DriverStatus @default(ATIVO)
+  entregas     Delivery[]
+
+  @@map("motoristas")
+}
