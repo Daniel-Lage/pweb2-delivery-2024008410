@@ -4,9 +4,9 @@
   "description": "Delivery Tracker - Projeto de PWEB2",
   "type": "module",
   "scripts": {
-    "start": "tsc && node dist/server.js",
+    "start": "npm run build && node dist/server.js",
     "dev": "tsx watch src/server.ts",
-    "build": "tsc",
+    "build": "npx prisma generate && tsc",
     "lint": "eslint src/**/*.ts",
     "check": "node autograder/check.mjs"
   },
