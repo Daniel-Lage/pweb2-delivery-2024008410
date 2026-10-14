@@ -51,7 +51,7 @@ export class DeliveriesService {
       const updatedDelivery = await this.deliveriesRepository.update(
         Number(id),
         {
-          status: DeliveryStatus.EM_TRANSITO,
+          status: DeliveryStatus.EM_TRANSITO as DeliveryStatus,
           historico: [
             ...delivery.historico,
             { data: new Date().toISOString(), descricao: "Despacho" },
@@ -66,7 +66,7 @@ export class DeliveriesService {
       const updatedDelivery = await this.deliveriesRepository.update(
         Number(id),
         {
-          status: DeliveryStatus.ENTREGUE,
+          status: DeliveryStatus.ENTREGUE as DeliveryStatus,
           historico: [
             ...delivery.historico,
             { data: new Date().toISOString(), descricao: "Entrega" },
@@ -84,14 +84,14 @@ export class DeliveriesService {
     const delivery = await this.read(Number(id));
 
     if (
-      delivery.status === DeliveryStatus.ENTREGUE ||
-      delivery.status === DeliveryStatus.CANCELADA
+      delivery.status === (DeliveryStatus.ENTREGUE as DeliveryStatus) ||
+      delivery.status === (DeliveryStatus.CANCELADA as DeliveryStatus)
     ) {
       throw new AppError("Entrega já foi finalizada", 422);
     }
 
     const updatedDelivery = await this.deliveriesRepository.update(Number(id), {
-      status: DeliveryStatus.CANCELADA,
+      status: DeliveryStatus.CANCELADA as DeliveryStatus,
       historico: [
         ...delivery.historico,
         { data: new Date().toISOString(), descricao: "Cancelamento" },

@@ -60,7 +60,7 @@ export class DeliveriesRepository implements IDeliveriesRepository {
   async create(payload: DeliveryCreatePayload) {
     const newDelivery = {
       ...payload,
-      status: DeliveryStatus.CRIADA,
+      status: DeliveryStatus.CRIADA as DeliveryStatus,
       motoristaId: null,
       historico: [{ data: new Date().toISOString(), descricao: "Criacao" }],
     };
