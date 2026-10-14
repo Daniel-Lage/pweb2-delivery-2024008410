@@ -16,6 +16,8 @@ Desenvolvida em express.js e Typescript.
 
 `npm run check`: testa o contrato da API (servidor precisa estar rodando).
 
+`npx prisma migrate`: cria a migração para aplicar alterações no schema.
+
 ## Rotas
 
 ### Motoristas

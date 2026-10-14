@@ -1,7 +1,7 @@
 {
   "name": "pweb2-delivery-cap04",
   "version": "1.0.0",
-  "description": "Delivery Tracker — Exercício do Cap. 4 (arquitetura em camadas + Repository/DI).",
+  "description": "Delivery Tracker - Projeto de PWEB2",
   "type": "module",
   "scripts": {
     "start": "tsc && node dist/server.js",
@@ -11,13 +11,18 @@
     "check": "node autograder/check.mjs"
   },
   "dependencies": {
+    "@prisma/adapter-better-sqlite3": "^7.10.0",
+    "@prisma/client": "^7.10.0",
+    "dotenv": "^18.0.7",
     "express": "^5.2.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@types/better-sqlite3": "^9.6.0",
     "@types/express": "^5.0.6",
-    "@types/node": "^26.3.0",
+    "@types/node": "^26.6.5",
     "eslint": "^10.9.1",
+    "prisma": "^7.10.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.23.12",
     "typescript": "^5.9.3",
