@@ -6,3 +6,31 @@ generator client {
 datasource db {
   provider = "sqlite"
 }
+
+enum DeliveryStatus {
+  CRIADA
+  EM_TRANSITO
+  ENTREGUE
+  CANCELADA
+}
+
+model Event {
+  id         Int      @id @default(autoincrement())
+  data       String
+  descricao  String
+  delivery   Delivery @relation(fields: [deliveryId], references: [id])
+  deliveryId Int
+
+  @@map("eventos")
+}
+
+model Delivery {
+  id        Int            @id @default(autoincrement())
+  descricao String
+  origem    String
+  destino   String
+  status    DeliveryStatus @default(CRIADA)
+  historico Event[]
+
+  @@map("entregas")
+}
