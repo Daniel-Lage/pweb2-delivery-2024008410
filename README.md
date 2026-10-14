@@ -4,6 +4,8 @@ Aplicação backend para rastrear o ciclo de vida de encomendas de uma empresa d
 
 Desenvolvida em express.js e Typescript.
 
+Dados armazenados em SQLite com Prisma
+
 ## Scripts
 
 `npm start`: compila a aplicação para JS e roda o servidor.
@@ -18,7 +20,7 @@ Desenvolvida em express.js e Typescript.
 
 `npx prisma migrate dev`: cria a migração para aplicar alterações no schema.
 
-`npx prisma generate`: gera o cliente prisma.
+`npx prisma generate`: gera o codigo TS baseado no arquivo "schema.prisma".
 
 ## Rotas
 
