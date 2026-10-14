@@ -8,6 +8,6 @@ export type Driver = {
   id: number;
   nome: string;
   cpf: string;
-  placaVeiculo?: string;
+  placaVeiculo?: string | null;
   status: DriverStatus;
 };
