@@ -16,10 +16,14 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Instalar dependências
         run: npm install --no-audit --no-fund
+
+      - name: Criar arquivo .env
+        run: |
+          echo DATABASE_URL="${{ secrets.DATABASE_URL }}" > .env
 
       - name: Subir o servidor
         run: |
