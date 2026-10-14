@@ -25,12 +25,30 @@ model Event {
 }
 
 model Delivery {
-  id        Int            @id @default(autoincrement())
-  descricao String
-  origem    String
-  destino   String
-  status    DeliveryStatus @default(CRIADA)
-  historico Event[]
+  id          Int            @id @default(autoincrement())
+  descricao   String
+  origem      String
+  destino     String
+  status      DeliveryStatus @default(CRIADA)
+  motoristaId Int?
+  motorista   Driver?        @relation(fields: [motoristaId], references: [id])
+  historico   Event[]
 
   @@map("entregas")
+}
+
+enum DriverStatus {
+  ATIVO
+  INATIVO
+}
+
+model Driver {
+  id           Int          @id @default(autoincrement())
+  nome         String
+  cpf          String       @unique
+  placaVeiculo String?
+  status       DriverStatus @default(ATIVO)
+  entregas     Delivery[]
+
+  @@map("motoristas")
 }
