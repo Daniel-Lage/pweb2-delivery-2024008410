@@ -15,11 +15,11 @@ enum DeliveryStatus {
 }
 
 model Event {
-  id         Int      @id @default(autoincrement())
-  data       String
-  descricao  String
-  delivery   Delivery @relation(fields: [deliveryId], references: [id])
-  deliveryId Int
+  id        Int      @id @default(autoincrement())
+  data      String
+  descricao String
+  entrega   Delivery @relation(fields: [entregaId], references: [id])
+  entregaId Int
 
   @@map("eventos")
 }
@@ -30,7 +30,7 @@ model Delivery {
   origem      String
   destino     String
   status      DeliveryStatus @default(CRIADA)
-  motoristaId Int?
+  motoristaId Int?           @map("motoristaId")
   motorista   Driver?        @relation(fields: [motoristaId], references: [id])
   historico   Event[]
 
