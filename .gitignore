@@ -4,5 +4,6 @@ dist/
 .env
 *.db
 .DS_Store
+.direnv/
 
 src/generated/prisma
