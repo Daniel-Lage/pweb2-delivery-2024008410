@@ -1,11 +1,9 @@
 import { Router } from "express";
-import deliveriesRouter from "./deliveries.routes.js";
-import driversRouter from "./drivers.routes.js";
+
+import apiRouter from "./api.routes.js";
 
 const router = Router();
 
-router.get("/health", (req, res) => res.json({ status: "ok" }));
-router.use("/motoristas", driversRouter);
-router.use("/entregas", deliveriesRouter);
+router.use("/api", apiRouter);
 
 export default router;
