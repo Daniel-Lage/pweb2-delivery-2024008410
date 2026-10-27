@@ -59,6 +59,10 @@ export class DeliveriesService {
         },
       );
 
+      if (!updatedDelivery) {
+        throw new AppError("Entrega não foi encontrada", 404);
+      }
+
       return updatedDelivery;
     }
 
@@ -73,6 +77,10 @@ export class DeliveriesService {
           ],
         },
       );
+
+      if (!updatedDelivery) {
+        throw new AppError("Entrega não foi encontrada", 404);
+      }
 
       return updatedDelivery;
     }
@@ -97,6 +105,10 @@ export class DeliveriesService {
         { data: new Date().toISOString(), descricao: "Cancelamento" },
       ],
     });
+
+    if (!updatedDelivery) {
+      throw new AppError("Entrega não foi encontrada", 404);
+    }
 
     return updatedDelivery;
   }
@@ -124,6 +136,10 @@ export class DeliveriesService {
         { data: new Date().toISOString(), descricao: "Atribuicao" },
       ],
     });
+
+    if (!updatedDelivery) {
+      throw new AppError("Entrega não foi encontrada", 404);
+    }
 
     return updatedDelivery;
   }
