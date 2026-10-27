@@ -12,7 +12,7 @@ export function validateAssignDrivers(
     throw new AppError("Campo 'motoristaId' é obrigatório", 400);
   }
 
-  if (typeof motoristaId !== "number") {
+  if (isNaN(Number(motoristaId))) {
     throw new AppError("Campo 'motoristaId' deve ser um número", 400);
   }
 
