@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Delivery Tracker - Motoristas</title>
+</head>
+
+<body>
+  <h1>Motoristas</h1>
+  <a href="/entregas">Entregas</a>
+
+  <% if (drivers.length === 0) { %>
+  <p>Nenhum motorista encontrado.</p>
+  <% } else { %>
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>CPF</th>
+        <th>Status</th>
+        <th>Placa</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% drivers.forEach((driver) => { %>
+      <tr>
+        <td>
+          <%= driver.nome %>
+        </td>
+        <td>
+          <%= driver.cpf %>
+        </td>
+        <td>
+          <%= driver.status %>
+        </td>
+        <td>
+          <%= driver.placaVeiculo ? driver.placaVeiculo : '--' %>
+        </td>
+        <td>
+          <a href="/motoristas/<%= driver.id %>">Ver
+            Detalhes</a>
+        </td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+  <% } %>
+
+  <a href="/motoristas/novo">Registrar Novo Motorista</a>
+</body>
+
+</html>

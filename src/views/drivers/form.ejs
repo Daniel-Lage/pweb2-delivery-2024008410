@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Delivery Tracker - Nova Entrega</title>
+</head>
+
+<body>
+  <h1>Novo Motorista</h1>
+  <a href="/motoristas"> Voltar para a lista de motoristas</a>
+
+  <form action="/motoristas" method="POST">
+    <label for="nome">Nome:</label>
+    <input type="text" id="nome" name="nome" required />
+    <label for="cpf">CPF:</label>
+    <input type="text" id="cpf" name="cpf" required />
+    <label for="placaVeiculo">Placa do Veiculo:</label>
+    <input type="text" id="placaVeiculo" name="placaVeiculo" />
+    <button type="submit">Criar Motorista</button>
+  </form>
+</body>
+
+</html>

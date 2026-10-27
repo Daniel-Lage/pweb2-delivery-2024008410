@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Delivery Tracker - Entregas</title>
+</head>
+
+<body>
+  <h1>Entregas</h1>
+  <a href="/motoristas">Motoristas</a>
+
+  <% if (deliveries.length === 0) { %>
+  <p>Nenhuma entrega encontrada.</p>
+  <% } else { %>
+  <table>
+    <thead>
+      <tr>
+        <th>Origem</th>
+        <th>Destino</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% deliveries.forEach((delivery) => { %>
+      <tr>
+        <td>
+          <%= delivery.origem %>
+        </td>
+        <td>
+          <%= delivery.destino %>
+        </td>
+        <td>
+          <%= delivery.status %>
+        </td>
+        <td>
+          <a href="/entregas/<%= delivery.id %>">Ver
+            Detalhes</a>
+        </td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+  <% } %>
+
+  <a href="/entregas/nova">Criar Nova Entrega</a>
+</body>
+
+</html>
