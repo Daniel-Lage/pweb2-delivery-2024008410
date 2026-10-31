@@ -1,0 +1,12 @@
+<header>
+  <h1>Delivery Tracker</h1>
+  <div class="tab-bar">
+    <% if (tab=='entregas') {%>
+    <a href="/entregas" class="active-tab tab">Entregas</a>
+    <a href="/motoristas" class="tab">Motoristas</a>
+    <% } else if (tab=='motoristas') {%>
+    <a href="/entregas" class="tab">Entregas</a>
+    <a href="/motoristas" class="active-tab tab">Motoristas</a>
+    <% } %>
+  </div>
+</header>

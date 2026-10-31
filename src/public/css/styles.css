@@ -1,0 +1,98 @@
+html,
+body {
+  font-family: Arial, sans-serif;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  text-align: center;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+h1 {
+  font-size: 1.5rem;
+}
+
+.tab {
+  height: 100%;
+  width: 100%;
+  border: 1px solid #111111;
+  display: flex;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.active-tab {
+  background-color: #111111;
+  color: #ffffff;
+}
+
+.tab-bar {
+  box-sizing: border-box;
+  width: 100vw;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  place-items: center;
+  gap: 10px;
+  padding: 10px;
+  padding-top: 0;
+  border-bottom: 1px solid #111111;
+}
+
+.tile {
+  border: 1px solid #111111;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 10px;
+  padding: 5px;
+}
+
+.tile:hover {
+  background-color: #e7e7e7;
+}
+
+.add {
+  justify-content: center;
+}
+
+.delivery-info {
+  display: flex;
+  align-items: center;
+}
+
+.three-grid {
+  width: 100vw;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: stretch;
+  justify-items: stretch;
+  padding: 10px;
+  gap: 10px;
+  box-sizing: border-box;
+}
+
+.inner-header {
+  border-bottom: 1px solid #707070;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  align-items: center;
+  padding: 5px;
+}
+
+.inner-body {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}

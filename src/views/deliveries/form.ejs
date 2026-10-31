@@ -1,25 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Delivery Tracker - Nova Entrega</title>
-</head>
+<%- include('../partials/head', { page_title: 'Nova Entrega' }) %>
 
 <body>
-  <h1>Nova Entrega</h1>
-  <a href="/motoristas"> Voltar para a lista de motoristas</a>
+  <%- include('../partials/header', { tab: 'entregas' }) %>
 
-  <form action="/entregas" method="POST">
-    <label for="descricao">Descrição:</label>
-    <input type="text" id="descricao" name="descricao" required />
-    <label for="origem">Origem:</label>
-    <input type="text" id="origem" name="origem" required />
-    <label for="destino">Destino:</label>
-    <input type="text" id="destino" name="destino" required />
-    <button type="submit">Criar Entrega</button>
-  </form>
+  <div class="inner-body">
+    <form action="/entregas" method="POST">
+      <label for="descricao">Descrição</label>
+      <input type="text" id="descricao" name="descricao" required />
+      <label for="origem">Origem</label>
+      <input type="text" id="origem" name="origem" required />
+      <label for="destino">Destino</label>
+      <input type="text" id="destino" name="destino" required />
+      <button type="submit">Criar Entrega</button>
+    </form>
+  </div>
 </body>
 
 </html>

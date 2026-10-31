@@ -1,0 +1,9 @@
+<div>
+  <%= driver.nome %>
+</div>
+
+<% if (driver.status === 'ATIVO') { %>
+<img src="/svg/user-check.svg" alt="Ativo">
+<% } else if (driver.status === 'INATIVO') { %>
+<img src="/svg/user-x.svg" alt="Inativo">
+<% } %>

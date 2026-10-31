@@ -1,0 +1,16 @@
+<div class="delivery-info">
+  Entrega de
+  <%= delivery.origem %>
+  <img src="/svg/arrow-right.svg" alt="Para">
+  <%= delivery.destino %>
+</div>
+
+<% if (delivery.status === 'CRIADA') { %>
+<img src="/svg/package.svg" alt="Criada">
+<% } else if (delivery.status === 'EM_TRANSITO') { %>
+<img src="/svg/truck.svg" alt="Em trânsito">
+<% } else if (delivery.status === 'ENTREGUE') { %>
+<img src="/svg/circle-check.svg" alt="Entregue">
+<% } else if (delivery.status === 'CANCELADA') { %>
+<img src="/svg/circle-x.svg" alt="Cancelada">
+<% } %>

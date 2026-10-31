@@ -1,98 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Delivery Tracker - Entrega</title>
-</head>
+<%- include('../partials/head', { page_title: 'Entrega' }) %>
 
 <body>
-  <h1>Entrega</h1>
-  <a href="/entregas"> Voltar para a lista de entregas</a>
+  <%- include('../partials/header', { tab: 'entregas' }) %>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Origem</th>
-        <th>Destino</th>
-        <th>Descrição</th>
-        <th>Status</th>
-        <th>Motorista</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-          <%= delivery.origem %>
-        </td>
-        <td>
-          <%= delivery.destino %>
-        </td>
-        <td>
-          <%= delivery.descricao %>
-        </td>
-        <td>
-          <%= delivery.status %>
-        </td>
-        <% if (delivery.motoristaId) { %>
-        <td>
-          <%= drivers.find((d) => d.id === delivery.motoristaId)?.nome %>
-        </td>
-        <% } else { %>
-        <td>
-          <form action="/entregas/<%= delivery.id %>/atribuir" method="POST">
-            <select id="motoristaId" name="motoristaId" required>
-              <% drivers.forEach((driver) => { %>
-              <option value="<%= driver.id %>">
-                <%= driver.nome %>
-              </option>
-              <% }); %>
-            </select>
-            <button type="submit">Atribuir Motorista</button>
-          </form>
-        </td>
-        <% } %>
-        <td>
-          <a href="/entregas/<%= delivery.id %>"></a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="inner-header">
+    <%- include('../partials/delivery', { delivery: delivery }) %>
+  </div>
 
-  <form action="/entregas/<%= delivery.id %>/avancar" method="POST">
-    <button type="submit">Avançar Status</button>
-  </form>
+  <div class="inner-body">
+    <strong>Descrição</strong>
+    <%= delivery.descricao %>
 
-  <form action="/entregas/<%= delivery.id %>/cancelar" method="POST">
-    <button type="submit">Cancelar Entrega</button>
-  </form>
+    <strong>Motorista</strong>
+    <% if (delivery.motoristaId) { %>
+    <td>
+      <%= drivers.find((d) => d.id === delivery.motoristaId)?.nome %>
+    </td>
+    <% } else { %>
+    <td>
+      --
+    </td>
+    <% } %>
 
-  <h2>Eventos da Entrega</h2>
-  <% if (delivery.historico.length === 0) { %>
-  <p>Nenhum evento de entrega encontrada.</p>
-  <% } else { %>
-  <table>
-    <thead>
-      <tr>
-        <th>Data</th>
-        <th>Descrição</th>
-      </tr>
-    </thead>
-    <tbody>
+    <strong>Ações</strong>
+    <% if (!delivery.motoristaId) { %>
+    <form action="/entregas/<%= delivery.id %>/atribuir" method="POST">
+      <select id="motoristaId" name="motoristaId" required>
+        <% drivers.forEach((driver) => { %>
+        <option value="<%= driver.id %>">
+          <%= driver.nome %>
+        </option>
+        <% }); %>
+      </select>
+      <button type="submit">Atribuir Motorista</button>
+    </form>
+    <% } %>
+
+    <form action="/entregas/<%= delivery.id %>/avancar" method="POST">
+      <button type="submit">Avançar Status</button>
+    </form>
+
+    <form action="/entregas/<%= delivery.id %>/cancelar" method="POST">
+      <button type="submit">Cancelar Entrega</button>
+    </form>
+
+    <strong>Eventos</strong>
+    <% if (delivery.historico.length === 0) { %>
+    <p>Nenhum evento de entrega encontrada.</p>
+    <% } else { %>
+    <div>
       <% delivery.historico.forEach((event) => { %>
-      <tr>
-        <td>
-          <%= event.data %>
-        </td>
-        <td>
-          <%= event.descricao %>
-        </td>
-      </tr>
+      <div>
+        <%= event.descricao %>
+        <%= event.data.substring(0, 10) %>
+      </div>
       <% }); %>
-    </tbody>
-  </table>
-  <% } %>
+    </div>
+    <% } %>
+  </div>
 </body>
 
 </html>

@@ -1,15 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Delivery Tracker - Nova Entrega</title>
-</head>
+<%- include('../partials/head', { page_title: 'Novo Motorista' }) %>
 
 <body>
-  <h1>Novo Motorista</h1>
-  <a href="/motoristas"> Voltar para a lista de motoristas</a>
+  <%- include('../partials/header', { tab: 'motoristas' }) %>
 
   <form action="/motoristas" method="POST">
     <label for="nome">Nome:</label>

@@ -1,54 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Delivery Tracker - Motoristas</title>
-</head>
+<%- include('../partials/head', { page_title: 'Motoristas' }) %>
 
 <body>
-  <h1>Motoristas</h1>
-  <a href="/entregas">Entregas</a>
+  <%- include('../partials/header', { tab: 'motoristas' }) %>
 
   <% if (drivers.length === 0) { %>
-  <p>Nenhum motorista encontrado.</p>
+  <p>Nenhum motorista encontrada.</p>
   <% } else { %>
-  <table>
-    <thead>
-      <tr>
-        <th>Nome</th>
-        <th>CPF</th>
-        <th>Status</th>
-        <th>Placa</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% drivers.forEach((driver) => { %>
-      <tr>
-        <td>
-          <%= driver.nome %>
-        </td>
-        <td>
-          <%= driver.cpf %>
-        </td>
-        <td>
-          <%= driver.status %>
-        </td>
-        <td>
-          <%= driver.placaVeiculo ? driver.placaVeiculo : '--' %>
-        </td>
-        <td>
-          <a href="/motoristas/<%= driver.id %>">Ver
-            Detalhes</a>
-        </td>
-      </tr>
-      <% }); %>
-    </tbody>
-  </table>
-  <% } %>
+  <div class="three-grid">
+    <%  drivers.forEach((driver) => { %>
+    <a class="tile" href="/motoristas/<%= driver.id %>">
+      <%- include('../partials/driver', { driver: driver }) %>
+    </a>
+    <% });} %>
+    <%- include('../partials/new') %>
+  </div>
 
-  <a href="/motoristas/novo">Registrar Novo Motorista</a>
 </body>
 
 </html>
