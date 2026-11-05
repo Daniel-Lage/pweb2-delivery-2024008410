@@ -5,17 +5,34 @@
 <body>
   <%- include('../partials/header', { tab: 'motoristas' }) %>
 
+  <p></p>
+
   <% if (drivers.length === 0) { %>
   <p>Nenhum motorista encontrada.</p>
   <% } else { %>
-  <div class="three-grid">
-    <%  drivers.forEach((driver) => { %>
-    <a class="tile" href="/motoristas/<%= driver.id %>">
-      <%- include('../partials/driver', { driver: driver }) %>
-    </a>
-    <% });} %>
-    <%- include('../partials/new') %>
+  <div class="table-container">
+    <table>
+      <tr class="table-header">
+        <th>Status</th>
+        <th>Nome</th>
+      </tr>
+      <%  drivers.forEach((driver) => { %>
+      <tr>
+        <td><a href="/motoristas/<%= driver.id %>"><%= driver.status %></a></td>
+        <td><a href="/motoristas/<%= driver.id %>"><%= driver.nome %></a></td>
+      </tr>
+      <% });%>
+
+      <tr>
+        <td colspan="2">
+          <a class="tile add" href="/motoristas/novo">
+            <img src="/svg/plus.svg" alt="Criar novo motorista" />
+          </a>
+        </td>
+      </tr>
+    </table>
   </div>
+  <% }%>
 
 </body>
 

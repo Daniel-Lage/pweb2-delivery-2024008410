@@ -5,16 +5,35 @@
 <body>
   <%- include('../partials/header', { tab: 'entregas' }) %>
 
+  <p></p>
+
   <% if (deliveries.length === 0) { %>
   <p>Nenhuma entrega encontrada.</p>
   <% } else { %>
-  <div class="three-grid">
-    <%  deliveries.forEach((delivery) => { %>
-    <a class="tile" href="/entregas/<%= delivery.id %>">
-      <%- include('../partials/delivery', { delivery: delivery }) %>
-    </a>
-    <% }); %>
-    <%- include('../partials/new-delivery') %>
+  <div class="table-container">
+    <table>
+      <tr class="table-header">
+        <th>Descrição</th>
+        <th>Origem</th>
+        <th>Destino</th>
+        <th>Status</th>
+      </tr>
+      <%  deliveries.forEach((delivery) => { %>
+      <tr>
+        <td><a href="/entregas/<%= delivery.id %>"><%= delivery.descricao %></a></td>
+        <td><a href="/entregas/<%= delivery.id %>"><%= delivery.origem %></a></td>
+        <td><a href="/entregas/<%= delivery.id %>"><%= delivery.destino %></a></td>
+        <td><a href="/entregas/<%= delivery.id %>"><%= delivery.status %></a></td>
+      </tr>
+      <% }); %>
+      <tr>
+        <td colspan="4">
+          <a class="tile add" href="/entregas/nova">
+            <img src="/svg/plus.svg" alt="Criar nova entrega" />
+          </a>
+        </td>
+      </tr>
+    </table>
   </div>
   <% } %>
 

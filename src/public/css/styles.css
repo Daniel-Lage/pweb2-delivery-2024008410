@@ -7,6 +7,12 @@ body {
   padding: 0;
 }
 
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 header {
   text-align: center;
 }
@@ -21,9 +27,6 @@ h1 {
 }
 
 .tab {
-  height: 100%;
-  width: 100%;
-  border: 1px solid #111111;
   display: flex;
   border-radius: 10px;
   justify-content: center;
@@ -32,34 +35,21 @@ h1 {
   padding-bottom: 5px;
 }
 
+.tab:hover {
+  text-decoration: underline;
+}
+
 .active-tab {
-  background-color: #111111;
-  color: #ffffff;
+  color: #5d22ff;
+  font-weight: bold;
 }
 
 .tab-bar {
-  box-sizing: border-box;
-  width: 100vw;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  place-items: center;
+  display: flex;
   gap: 10px;
   padding: 10px;
   padding-top: 0;
   border-bottom: 1px solid #111111;
-}
-
-.tile {
-  border: 1px solid #111111;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 10px;
-  padding: 5px;
-}
-
-.tile:hover {
-  background-color: #e7e7e7;
 }
 
 .add {
@@ -69,17 +59,6 @@ h1 {
 .delivery-info {
   display: flex;
   align-items: center;
-}
-
-.three-grid {
-  width: 100vw;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  align-items: stretch;
-  justify-items: stretch;
-  padding: 10px;
-  gap: 10px;
-  box-sizing: border-box;
 }
 
 .inner-header {
@@ -95,4 +74,67 @@ h1 {
   display: flex;
   flex-direction: column;
   padding: 10px;
+}
+
+table {
+  width: 60svw;
+  border-collapse: collapse;
+  padding: 10px;
+  border-radius: 10px;
+  table-layout: fixed;
+}
+
+.table-container {
+  display: flex;
+  align-self: center;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  border: 2px solid #707070;
+  width: fit-content;
+  overflow: hidden;
+}
+
+th {
+  padding: 10px;
+  text-align: center;
+  background-color: #707070;
+  color: white;
+}
+
+td {
+  padding: 8px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+td:not(:first-child) {
+  border-left: 1px solid #ddd;
+}
+
+.create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+}
+
+.create-form label {
+  font-weight: bold;
+}
+
+.create-form input {
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.create-form button {
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  background-color: #5d22ff;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
 }

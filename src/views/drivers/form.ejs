@@ -6,15 +6,17 @@
 <body>
   <%- include('../partials/header', { tab: 'motoristas' }) %>
 
-  <form action="/motoristas" method="POST">
-    <label for="nome">Nome:</label>
-    <input type="text" id="nome" name="nome" required />
-    <label for="cpf">CPF:</label>
-    <input type="text" id="cpf" name="cpf" required />
-    <label for="placaVeiculo">Placa do Veiculo:</label>
-    <input type="text" id="placaVeiculo" name="placaVeiculo" />
-    <button type="submit">Criar Motorista</button>
-  </form>
+  <div class="inner-body">
+    <form action="/motoristas" method="POST" class="create-form">
+      <label for="nome">Nome</label>
+      <input type="text" id="nome" name="nome" required />
+      <label for="cpf">CPF</label>
+      <input type="text" id="cpf" name="cpf" required />
+      <label for="placaVeiculo">Placa do Veiculo</label>
+      <input type="text" id="placaVeiculo" name="placaVeiculo" />
+      <button type="submit">Criar Motorista</button>
+    </form>
+  </div>
 </body>
 
 </html>
