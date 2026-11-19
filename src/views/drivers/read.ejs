@@ -6,29 +6,45 @@
 <body>
   <%- include('../partials/header', { tab: 'motoristas' }) %>
 
-  <div class="inner-header">
-    <%- include('../partials/driver', { driver: driver }) %>
-  </div>
 
   <div class="inner-body">
-    <strong>CPF</strong>
+    <h1><%= driver.nome %></h1>
+    <p class="label">CPF</p>
     <p><%= driver.cpf %></p>
 
-    <strong>Placa do Veiculo</strong>
+    <p class="label">Placa do Veiculo</p>
     <p><%= driver.placaVeiculo || '--' %></p>
 
-    <strong>Entregas</strong>
+    <p class="label">Status</p>
+    <p><%= driver.status %></p>
+
+    <p class="label">Entregas</p>
     <% if (deliveries.length === 0) { %>
-    <p>Nenhuma entrega encontrada.</p>
+    <p class="label">Nenhuma entrega encontrada.</p>
     <% } else { %>
-    <div class="three-grid">
-      <%  deliveries.forEach((delivery) => { %>
-      <a class="tile" href="/entregas/<%= delivery.id %>">
-        <%- include('../partials/delivery', { delivery: delivery }) %>
-      </a>
-      <% }); %>
+    <div class="table">
+      <div class="table-header table-row">
+        <div class="table-cell">Descrição</div>
+        <div class="table-cell">Origem</div>
+        <div class="table-cell">Destino</div>
+        <div class="table-cell">Status</div>
+      </div>
+
+      <div class="table-body">
+        <%  deliveries.forEach((delivery) => { %>
+        <a class="table-row" href="/entregas/<%= delivery.id %>">
+          <div class="table-cell"><%= delivery.descricao %></div>
+          <div class="table-cell"><%= delivery.origem %></div>
+          <div class="table-cell"><%= delivery.destino %></div>
+          <div class="table-cell"><%= delivery.status %></div>
+        </a>
+        <% }); %>
+      </div>
+
     </div>
-    <% } %>
+  </div>
+
+  <% } %>
 
 </body>
 

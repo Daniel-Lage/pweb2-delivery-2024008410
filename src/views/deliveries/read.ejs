@@ -6,60 +6,78 @@
 <body>
   <%- include('../partials/header', { tab: 'entregas' }) %>
 
-  <div class="inner-header">
-    <%- include('../partials/delivery', { delivery: delivery }) %>
-  </div>
 
   <div class="inner-body">
-    <strong>Descrição</strong>
+    <h1>Entrega</h1>
+
+    <p class="label">Origem</p>
+    <%= delivery.origem %>
+
+    <p class="label">Destino</p>
+    <%= delivery.destino %>
+
+    <p class="label">Descrição</p>
     <%= delivery.descricao %>
 
-    <strong>Motorista</strong>
+    <p class="label">Motorista</p>
     <% if (delivery.motoristaId) { %>
-    <td>
+    <p>
       <%= drivers.find((d) => d.id === delivery.motoristaId)?.nome %>
-    </td>
-    <% } else { %>
-    <td>
-      --
-    </td>
-    <% } %>
-
-    <strong>Ações</strong>
-    <% if (!delivery.motoristaId) { %>
+    </p>
+    <% } else if (delivery.status === "CRIADA") { %>
     <form action="/entregas/<%= delivery.id %>/atribuir" method="POST">
-      <select id="motoristaId" name="motoristaId" required>
+      <select id="motoristaId" name="motoristaId" class="select" required>
         <% drivers.forEach((driver) => { %>
         <option value="<%= driver.id %>">
           <%= driver.nome %>
         </option>
         <% }); %>
       </select>
-      <button type="submit">Atribuir Motorista</button>
+      <button class="button" type="submit">Atribuir Motorista</button>
     </form>
+    <% } else { %>
+    <p>
+      Motorista não atribuído.
+    </p>
     <% } %>
 
-    <form action="/entregas/<%= delivery.id %>/avancar" method="POST">
-      <button type="submit">Avançar Status</button>
-    </form>
 
-    <form action="/entregas/<%= delivery.id %>/cancelar" method="POST">
-      <button type="submit">Cancelar Entrega</button>
-    </form>
 
-    <strong>Eventos</strong>
+    <p class="label">Status</p>
+    <%= delivery.status %>
+    <div class="actions">
+      <form action="/entregas/<%= delivery.id %>/avancar" method="POST">
+        <button class="button" type="submit">Avançar Status</button>
+      </form>
+      <form action="/entregas/<%= delivery.id %>/cancelar" method="POST">
+        <button class="button danger" type="submit">Cancelar Entrega</button>
+      </form>
+
+    </div>
+
+    <p class="label">Eventos</p>
     <% if (delivery.historico.length === 0) { %>
     <p>Nenhum evento de entrega encontrada.</p>
     <% } else { %>
-    <div>
-      <% delivery.historico.forEach((event) => { %>
-      <div>
-        <%= event.descricao %>
-        <%= event.data.substring(0, 10) %>
+
+    <div class="table">
+      <div class="table-header table-row">
+        <div class="table-cell">Descrição</div>
+        <div class="table-cell">Data</div>
       </div>
-      <% }); %>
+
+      <div class="table-body">
+        <%  delivery.historico.forEach((event) => { %>
+        <div class="table-row">
+          <div class="table-cell"><%= event.descricao %></div>
+          <div class="table-cell"><%= event.data.substring(0, 10) %></div>
+        </div>
+        <% }); %>
+      </div>
+
     </div>
-    <% } %>
+  </div>
+  <% } %>
   </div>
 </body>
 

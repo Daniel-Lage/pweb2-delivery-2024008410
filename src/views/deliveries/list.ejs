@@ -5,37 +5,39 @@
 <body>
   <%- include('../partials/header', { tab: 'entregas' }) %>
 
-  <p></p>
+  <div class="inner-body">
 
-  <% if (deliveries.length === 0) { %>
-  <p>Nenhuma entrega encontrada.</p>
-  <% } else { %>
-  <div class="table-container">
-    <table>
-      <tr class="table-header">
-        <th>Descrição</th>
-        <th>Origem</th>
-        <th>Destino</th>
-        <th>Status</th>
-      </tr>
-      <%  deliveries.forEach((delivery) => { %>
-      <tr>
-        <td><a href="/entregas/<%= delivery.id %>"><%= delivery.descricao %></a></td>
-        <td><a href="/entregas/<%= delivery.id %>"><%= delivery.origem %></a></td>
-        <td><a href="/entregas/<%= delivery.id %>"><%= delivery.destino %></a></td>
-        <td><a href="/entregas/<%= delivery.id %>"><%= delivery.status %></a></td>
-      </tr>
-      <% }); %>
-      <tr>
-        <td colspan="4">
-          <a class="tile add" href="/entregas/nova">
-            <img src="/svg/plus.svg" alt="Criar nova entrega" />
-          </a>
-        </td>
-      </tr>
-    </table>
+    <% if (deliveries.length === 0) { %>
+    <p>Nenhuma entrega encontrada.</p>
+    <% } else { %>
+    <div class="table">
+      <div class="table-header table-row">
+        <div class="table-cell">Descrição</div>
+        <div class="table-cell">Origem</div>
+        <div class="table-cell">Destino</div>
+        <div class="table-cell">Status</div>
+      </div>
+
+      <div class="table-body">
+        <%  deliveries.forEach((delivery) => { %>
+        <a class="table-row" href="/entregas/<%= delivery.id %>">
+          <div class="table-cell"><%= delivery.descricao %></div>
+          <div class="table-cell"><%= delivery.origem %></div>
+          <div class="table-cell"><%= delivery.destino %></div>
+          <div class="table-cell"><%= delivery.status %></div>
+        </a>
+        <% }); %>
+      </div>
+
+      <div class="table-footer table-row">
+        <a class="table-cell add" href="/entregas/nova">
+          <img src="/svg/plus.svg" alt="Criar nova entrega" />
+        </a>
+      </div>
+    </div>
   </div>
   <% } %>
+  </div>
 
 </body>
 

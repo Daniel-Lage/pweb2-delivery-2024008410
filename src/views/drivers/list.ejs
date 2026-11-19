@@ -5,35 +5,36 @@
 <body>
   <%- include('../partials/header', { tab: 'motoristas' }) %>
 
-  <p></p>
+  <div class="inner-body">
 
-  <% if (drivers.length === 0) { %>
-  <p>Nenhum motorista encontrada.</p>
-  <% } else { %>
-  <div class="table-container">
-    <table>
-      <tr class="table-header">
-        <th>Status</th>
-        <th>Nome</th>
-      </tr>
-      <%  drivers.forEach((driver) => { %>
-      <tr>
-        <td><a href="/motoristas/<%= driver.id %>"><%= driver.status %></a></td>
-        <td><a href="/motoristas/<%= driver.id %>"><%= driver.nome %></a></td>
-      </tr>
-      <% });%>
+    <% if (drivers.length === 0) { %>
+    <p>Nenhum motorista encontrada.</p>
+    <% } else { %>
+    <div class="table">
+      <div class="table-header table-row">
+        <div class="table-cell">Status</div>
+        <div class="table-cell">Nome</div>
+      </div>
 
-      <tr>
-        <td colspan="2">
-          <a class="tile add" href="/motoristas/novo">
-            <img src="/svg/plus.svg" alt="Criar novo motorista" />
-          </a>
-        </td>
-      </tr>
-    </table>
+      <div class="table-body">
+
+        <%  drivers.forEach((driver) => { %>
+        <a href="/motoristas/<%= driver.id %>" class="table-row">
+          <div class="table-cell"><%= driver.status %></div>
+          <div class="table-cell"><%= driver.nome %></div>
+        </a>
+        <% });%>
+      </div>
+
+      <div class="table-footer table-row">
+        <a class="table-cell add" href="/motoristas/novo">
+          <img src="/svg/plus.svg" alt="Criar novo motorista" />
+        </a>
+      </div>
+    </div>
+    <% }%>
+
   </div>
-  <% }%>
-
 </body>
 
 </html>
